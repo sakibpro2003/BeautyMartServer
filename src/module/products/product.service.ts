@@ -9,6 +9,7 @@ const updateInventory = async (id: string, quantityOrdered: number) => {
     throw new Error("Product not found");
   }
 
+  
   if (product.quantity < quantityOrdered) {
     throw new Error("Insufficient stock available");
   }
