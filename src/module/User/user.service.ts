@@ -1,6 +1,6 @@
 import { TUser } from "./user.interface";
 import { User } from "./user.model";
-import bcrypt from "bcrypt";
+import bcrypt from "bcryptjs";
 
 const createUserIntoDb = async (userData: TUser) => {
   const result = await User.create(userData);

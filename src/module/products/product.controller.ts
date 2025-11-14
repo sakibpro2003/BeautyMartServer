@@ -75,7 +75,7 @@ const updateProduct = async (req: Request, res: Response): Promise<any> => {
     const data = req.body;
     const result = await userService.updateProduct(productId, data);
     res.json({
-      message: "Bicycle updated successfully",
+      message: "Product updated successfully",
       data: result,
     });
   } catch (error) {
