@@ -1,6 +1,6 @@
 import { Request, Response } from "express";
-import Product from "./product.model";
 import { userService } from "./product.service";
+import { buildProductQueryOptions } from "./product.query";
 
 const createProduct = async (req: Request, res: Response) => {
   try {
@@ -21,10 +21,21 @@ const createProduct = async (req: Request, res: Response) => {
 
 const getProduct = async (req: Request, res: Response) => {
   try {
-    const result = await userService.getProduct();
+    const { filters, sort, limit, skip, page, } = buildProductQueryOptions(req.query);
+    const [result, total] = await Promise.all([
+      userService.getProduct({ filters, sort, limit, skip }),
+      userService.countProducts(filters),
+    ]);
+
     res.json({
-      message: "Medicines retrieved successfully",
+      message: "Products retrieved successfully",
       status: true,
+      meta: {
+        page,
+        limit,
+        total,
+        totalPages: Math.ceil(total / limit) || 1,
+      },
       data: result,
     });
   } catch (error) {
@@ -43,12 +54,12 @@ const getSingleProduct = async (req: Request, res: Response): Promise<any> => {
     if (!result) {
       return res.status(404).json({
         status: false,
-        message: "Bike not found",
+        message: "Product not found",
       });
     }
 
     res.json({
-      message: "Bicycle retrieved successfully",
+      message: "Product retrieved successfully",
       status: true,
       data: result,
     });
@@ -68,7 +79,7 @@ const updateProduct = async (req: Request, res: Response): Promise<any> => {
     if (!resultToUpdate) {
       return res.status(404).json({
         status: false,
-        message: "Bike not found",
+        message: "Product not found",
       });
     }
     const productId = req.params.productId;
@@ -91,7 +102,7 @@ const deleteProduct = async (req: Request, res: Response) => {
     const productId = req.params.productId;
     const result = await userService.deleteProduct(productId);
     res.json({
-      message: "Bicycle deleted successfully",
+      message: "Product deleted successfully",
       status: true,
       data: {},
     });
