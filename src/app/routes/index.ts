@@ -8,6 +8,7 @@ import { AuthRoutes } from "../../module/admin/Auth/auth.route";
 import OrderRoutes from "../../module/orders/order.router";
 import { UserRoutes } from "../../module/User/user.route";
 import { cartRoutes } from "../../module/cart/cart.router";
+import { promotionRoutes } from "../../module/promotions/promotion.router";
 
 const router = Router();
 
@@ -19,6 +20,10 @@ const moduleRoutes = [
   {
     path: "/cart",
     route: cartRoutes,
+  },
+  {
+    path: "/promotions",
+    route: promotionRoutes,
   },
 
   {
