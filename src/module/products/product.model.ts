@@ -9,8 +9,19 @@ const productsSchema = new Schema<IProduct>(
     form:{
       type:String,
       required:false,
-      enum:["Tablet", "Syrup", "Injection", "Ointment","Capsulec"],
-      default:"Tablet"
+      enum:[
+        "Cream",
+        "Serum",
+        "Lotion",
+        "Cleanser",
+        "Mask",
+        "Oil",
+        "Toner",
+        "Gel",
+        "Mist",
+        "Balm",
+      ],
+      default:"Serum"
     },
     rating:{
       type:Number,

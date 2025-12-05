@@ -13,8 +13,18 @@ interface IProduct extends Document {
   packSize: string;
   requiredPrescription: boolean;
   expiryDate: Date;
-  category: "Painkiller" | "Antibiotic" | "Cold" | "Vitamin" | "Antacid";
-  form: "Tablet" | "Syrup" | "Injection" | "Ointment";
+  category: "Skincare" | "Haircare" | "Makup" | "Vitamin" | "Fragrance" | "Lip";
+  form:
+    | "Cream"
+    | "Serum"
+    | "Lotion"
+    | "Cleanser"
+    | "Mask"
+    | "Oil"
+    | "Toner"
+    | "Gel"
+    | "Mist"
+    | "Balm";
   manufacturer: {
     name: string;
     address?: string;
