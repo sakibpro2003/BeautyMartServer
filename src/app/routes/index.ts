@@ -11,6 +11,9 @@ import { cartRoutes } from "../../module/cart/cart.router";
 import { promotionRoutes } from "../../module/promotions/promotion.router";
 import { reviewRoutes } from "../../module/reviews/review.router";
 import { wishlistRoutes } from "../../module/wishlist/wishlist.router";
+import { contentRoutes } from "../../module/content/content.router";
+import { returnRoutes } from "../../module/returns/return.router";
+import { feedbackRoutes } from "../../module/feedback/feedback.router";
 
 const router = Router();
 
@@ -28,12 +31,24 @@ const moduleRoutes = [
     route: promotionRoutes,
   },
   {
+    path: "/content",
+    route: contentRoutes,
+  },
+  {
     path: "/reviews",
     route: reviewRoutes,
   },
   {
     path: "/wishlist",
     route: wishlistRoutes,
+  },
+  {
+    path: "/returns",
+    route: returnRoutes,
+  },
+  {
+    path: "/feedback",
+    route: feedbackRoutes,
   },
 
   {
