@@ -14,6 +14,7 @@ import { wishlistRoutes } from "../../module/wishlist/wishlist.router";
 import { contentRoutes } from "../../module/content/content.router";
 import { returnRoutes } from "../../module/returns/return.router";
 import { feedbackRoutes } from "../../module/feedback/feedback.router";
+import { shadeQuizRoutes } from "../../module/shadeQuiz/shadeQuiz.router";
 
 const router = Router();
 
@@ -49,6 +50,10 @@ const moduleRoutes = [
   {
     path: "/feedback",
     route: feedbackRoutes,
+  },
+  {
+    path: "/shade-quiz",
+    route: shadeQuizRoutes,
   },
 
   {
