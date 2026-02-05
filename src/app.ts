@@ -15,7 +15,6 @@ app.use(
     origin: [
       "http://localhost:5173",
       "http://localhost:3000",
-      "https://medi-mart-client-lilac.vercel.app"
     ],
     credentials: true,
     allowedHeaders: ["Content-Type", "Authorization"],

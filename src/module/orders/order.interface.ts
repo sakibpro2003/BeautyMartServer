@@ -2,6 +2,7 @@ import { Document, Types } from "mongoose";
 
 export interface IOrder extends Document {
   user: Types.ObjectId;
+  stripeSessionId?: string;
   products: {
     product: Types.ObjectId;
     quantity: number;

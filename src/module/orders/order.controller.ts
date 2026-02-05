@@ -5,6 +5,7 @@ import { orderService } from "./order.service";
 import { User } from "../User/user.model";
 import Cart from "../cart/cart.model";
 import mongoose, { ObjectId } from "mongoose";
+import Order from "./order.model";
 
 const createOrder = catchAsync(async (req: Request, res: Response) => {
   if (!req.user) {
@@ -23,9 +24,37 @@ const createOrder = catchAsync(async (req: Request, res: Response) => {
     });
   }
   const userId = getUser._id;
-  const paymentDetails = req.body;
+  const paymentDetails = req.body as any;
+
+  const stripeSessionId =
+    typeof paymentDetails?.stripeSessionId === "string" &&
+    paymentDetails.stripeSessionId.trim()
+      ? paymentDetails.stripeSessionId.trim()
+      : undefined;
+
+  if (stripeSessionId) {
+    const existingOrder = await Order.findOne({ user: userId, stripeSessionId });
+    if (existingOrder) {
+      return res.status(httpStatus.OK).json({
+        success: true,
+        message: "Order already created for this payment session.",
+        data: existingOrder,
+      });
+    }
+  }
+
   const cartItems = await Cart.find({ user: userId }).populate("product");
   if (!cartItems.length) {
+    if (stripeSessionId) {
+      const existingOrder = await Order.findOne({ user: userId, stripeSessionId });
+      if (existingOrder) {
+        return res.status(httpStatus.OK).json({
+          success: true,
+          message: "Order already created for this payment session.",
+          data: existingOrder,
+        });
+      }
+    }
     return res.status(httpStatus.BAD_REQUEST).json({
       success: false,
       message: "Cart is empty. Cannot create an order.",
@@ -43,11 +72,23 @@ const createOrder = catchAsync(async (req: Request, res: Response) => {
         "Some items require a prescription. Please upload it before proceeding.",
     });
   }
-  const newOrder = await orderService.createOrder(
-    userId,
-    cartItems,
-    paymentDetails
-  );
+
+  let newOrder;
+  try {
+    newOrder = await orderService.createOrder(userId, cartItems, paymentDetails);
+  } catch (err: any) {
+    if (stripeSessionId && (err?.code === 11000 || err?.name === "MongoServerError")) {
+      const existingOrder = await Order.findOne({ user: userId, stripeSessionId });
+      if (existingOrder) {
+        return res.status(httpStatus.OK).json({
+          success: true,
+          message: "Order already created for this payment session.",
+          data: existingOrder,
+        });
+      }
+    }
+    throw err;
+  }
   return res.status(httpStatus.CREATED).json({
     success: true,
     message: "Order created successfully!",
